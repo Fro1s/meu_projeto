@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classificação dos Times</title>
+
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        text-align: center;
+        margin: 20px;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      thead {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Classificação dos Times</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Pontos</th>
+          <th>Gols Feitos</th>
+          <th>Gols Sofridos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% classificacao.forEach((time) => { %>
+        <tr>
+          <td><%= time.time %></td>
+          <td><%= time.pontos %></td>
+          <td><%= time.golsFeitos %></td>
+          <td><%= time.golsSofridos %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </body>
+</html>

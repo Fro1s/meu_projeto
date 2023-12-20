@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Jogador</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      form {
+        margin-top: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      input,
+      select {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 16px;
+      }
+
+      button {
+        padding: 10px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      li button {
+        padding: 8px;
+        font-size: 14px;
+        background-color: #ff3333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      li button:hover {
+        background-color: #ff0000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cadastro de Jogador</h1>
+    <form action="/cadastroJogador" method="post">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" required />
+      <br />
+      <label for="numero_camiseta">Número da Camiseta:</label>
+      <input
+        type="number"
+        id="numero_camiseta"
+        name="numero_camiseta"
+        required
+      />
+      <br />
+      <label for="equipe">Equipe do Jogador:</label>
+      <select name="equipe" id="equipe" required>
+        <% equipes.forEach((equipe) => { %>
+        <option value="<%= equipe.id %>"><%= equipe.nome %></option>
+        <% }); %>
+      </select>
+      <br />
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <br />
+
+    <label for="selecaoEquipe">Selecionar Equipe:</label>
+    <select id="selecaoEquipe" onchange="listarJogadoresPorEquipe()">
+      <option value="">Todas as Equipes</option>
+      <% equipes.forEach((equipe) => { %>
+      <option value="<%= equipe.id %>"><%= equipe.nome %></option>
+      <% }); %>
+    </select>
+
+    <button onclick="listarJogadores()">Listar Jogadores</button>
+    <ul id="listaJogadores"></ul>
+
+    <script>
+      function removerJogador(id) {
+        if (confirm("Tem certeza que deseja remover este jogador?")) {
+          fetch(`/removerJogador/${id}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              listarJogadores();
+            })
+            .catch((error) => console.error("Erro ao remover jogador:", error));
+        }
+      }
+
+      function listarJogadores() {
+        fetch("/listarJogadores")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const listaJogadores = document.getElementById("listaJogadores");
+            listaJogadores.innerHTML = "";
+            data.forEach((jogador) => {
+              const listItem = document.createElement("li");
+              listItem.textContent = `Nome: ${jogador.nome}, Número da Camiseta: ${jogador.numero_camiseta}, Equipe: ${jogador.equipe}`;
+
+              const removeButton = document.createElement("button");
+              removeButton.textContent = "Remover";
+              removeButton.onclick = () => removerJogador(jogador.id);
+
+              listItem.appendChild(removeButton);
+              listaJogadores.appendChild(listItem);
+            });
+          })
+          .catch((error) => console.error("Erro ao listar jogadores:", error));
+      }
+
+      function listarJogadoresPorEquipe() {
+        const equipeId = document.getElementById("selecaoEquipe").value;
+
+        let url = "/listarJogadores";
+        if (equipeId) {
+          url += `/${equipeId}`;
+        }
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const listaJogadores = document.getElementById("listaJogadores");
+            listaJogadores.innerHTML = "";
+            data.forEach((jogador) => {
+              const listItem = document.createElement("li");
+              listItem.textContent = `Nome: ${jogador.nome}, Número da Camiseta: ${jogador.numero_camiseta}, Equipe: ${jogador.equipe}`;
+
+              const removeButton = document.createElement("button");
+              removeButton.textContent = "Remover";
+              removeButton.onclick = () => removerJogador(jogador.id);
+
+              listItem.appendChild(removeButton);
+              listaJogadores.appendChild(listItem);
+            });
+          })
+          .catch((error) => console.error("Erro ao listar jogadores:", error));
+      }
+    </script>
+  </body>
+</html>
